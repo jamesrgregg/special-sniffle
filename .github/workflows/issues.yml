@@ -1,8 +1,8 @@
 name: Report remaining open issues
 on: 
   schedule: 
-    # Daily at 8:20 UTC
-    - cron: '*/5 * * * *'
+    # Once a year at 00:00 on day-of-month 1 in January
+    - cron: '0 0 1 1 *'
 jobs:
   track_pr:
     runs-on: ubuntu-latest
