@@ -20,7 +20,7 @@ jobs:
 
           echo 'NUM_OPEN_ISSUES='$numOpenIssues >> $GITHUB_ENV
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
       - run: |
