@@ -21,7 +21,7 @@ jobs:
     - name: List open issues
       id: list_issues
       run: |
-        REPOSITORIES=("jamesrgregg/special-sniffle", "jamesrgregg/barlonsalon", ("jamesrgregg/barlonsalon-actions" )
+        REPOSITORIES=("jamesrgregg/special-sniffle", "jamesrgregg/barlonsalon", "jamesrgregg/barlonsalon-actions" )
         ISSUE_LIST=""
         for REPO in "${REPOSITORIES[@]}"; do
           ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO/issues?state=open")
