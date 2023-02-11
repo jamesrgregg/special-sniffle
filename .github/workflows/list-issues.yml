@@ -21,10 +21,10 @@ jobs:
     - name: List open issues
       id: list_issues
       run: |
-        REPOSITORIES=("special-sniffle", "barlonsalon", "barlonsalon-actions")
+        REPOSITORIES=("jamesrgregg/special-sniffle")
         ISSUE_LIST=""
         for REPO in "${REPOSITORIES[@]}"; do
-          ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/$REPO/issues?state=open")
+          ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO/issues?state=open")
           # ISSUES_COUNT=$(echo $ISSUES | jq '. | length')
           echo $ISSUES | jq '.'
           if [ $ISSUES_COUNT -gt 0 ]; then
