@@ -38,7 +38,7 @@ jobs:
         echo "## Open Issues\n$ISSUE_LIST"
 
     - name: Update pull request
-      uses: octokit/request-action@v1
+      uses: octokit/request-action@v2.1.7
       with:
         method: PATCH
         path: /repos/${{ env.GITHUB_REPOSITORY }}/pulls/${{ env.GITHUB_PULL_REQUEST }}
