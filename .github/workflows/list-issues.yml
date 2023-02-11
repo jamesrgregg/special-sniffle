@@ -1,0 +1,48 @@
+name: List Open Issues
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  list_open_issues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: List open issues
+      id: list_issues
+      run: |
+        REPOSITORIES=("special-sniffle" "barlonsalon" "barlonsalon-actions")
+        ISSUE_LIST=""
+        for REPO in "${REPOSITORIES[@]}"; do
+          ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/$REPO/issues?state=open")
+          ISSUES_COUNT=$(echo $ISSUES | jq '. | length')
+          if [ $ISSUES_COUNT -gt 0 ]; then
+            ISSUE_LIST="$ISSUE_LIST\n\n**$REPO**\n"
+            for (( i=0; i<$ISSUES_COUNT; i++ )); do
+              ISSUE_TITLE=$(echo $ISSUES | jq ".[$i].title")
+              ISSUE_URL=$(echo $ISSUES | jq ".[$i].html_url")
+              ISSUE_LIST="$ISSUE_LIST- $ISSUE_TITLE ($ISSUE_URL)\n"
+            done
+          fi
+        done
+
+        echo "## Open Issues\n$ISSUE_LIST"
+
+    - name: Update pull request
+      uses: octokit/request-action@v1
+      with:
+        method: PATCH
+        path: /repos/${{ env.GITHUB_REPOSITORY }}/pulls/${{ env.GITHUB_PULL_REQUEST }}
+        body: |
+          {
+            "body": "${{ steps.list_issues.outputs.message }}"
+          }
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
