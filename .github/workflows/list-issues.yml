@@ -31,7 +31,7 @@ jobs:
             echo "Error: $(echo $ISSUES | jq '.message')"
             exit 1
           fi
-          ISSUES_COUNT=$(echo $ISSUES_JSON | jq '. | {.html_url}')
+          ISSUES_COUNT=$(echo $ISSUES_JSON | jq '. | {html_url}')
           if [ $ISSUES_COUNT -gt 0 ]; then
             ISSUE_LIST="$ISSUE_LIST\n\n**$REPO**\n"
             for (( i=0; i<$ISSUES_COUNT; i++ )); do
