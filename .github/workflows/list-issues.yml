@@ -22,21 +22,26 @@ jobs:
       id: list_issues
       run: |
         REPOSITORIES=("jamesrgregg/special-sniffle", "jamesrgregg/barlonsalon", "jamesrgregg/barlonsalon-actions" )
-        ISSUE_LIST=""
+        ISSUE_LIST="" 
         for REPO in "${REPOSITORIES[@]}"; do
-          ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO/issues?state=open")
-          ISSUES_COUNT=$(echo $ISSUES | jq '. | {html_url}')
-          # echo $ISSUES | jq '.'
+          ISSUES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/$REPO/issues?state=open")
+          ISSUES_JSON=$(echo $ISSUES | jq '.' 2>/dev/null)
+          if [ $? -ne 0 ]; then
+            # If the response is not valid JSON, print the error message
+            echo "Error: $(echo $ISSUES | jq '.message')"
+            exit 1
+          fi
+          ISSUES_COUNT=$(echo $ISSUES_JSON | jq '. | length')
           if [ $ISSUES_COUNT -gt 0 ]; then
             ISSUE_LIST="$ISSUE_LIST\n\n**$REPO**\n"
             for (( i=0; i<$ISSUES_COUNT; i++ )); do
-              ISSUE_TITLE=$(echo $ISSUES | jq ".[$i].title")
-              ISSUE_URL=$(echo $ISSUES | jq ".[$i].html_url")
+              ISSUE_TITLE=$(echo $ISSUES_JSON | jq ".[$i].title")
+              ISSUE_URL=$(echo $ISSUES_JSON | jq ".[$i].html_url")
               ISSUE_LIST="$ISSUE_LIST- $ISSUE_TITLE ($ISSUE_URL)\n"
             done
           fi
         done
-
+        
         echo "## Open Issues\n$ISSUE_LIST"
 
     - name: Update pull request
