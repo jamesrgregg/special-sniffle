@@ -29,6 +29,7 @@ jobs:
           # echo $ISSUES | jq '.'
           if [ $ISSUES_COUNT -gt 0 ]; then
             ISSUE_LIST="$ISSUE_LIST\n\n**$REPO**\n"
+            echo "$ISSUE_LIST"
             for (( i=0; i<$ISSUES_COUNT; i++ )); do
               ISSUE_TITLE=$(echo $ISSUES | jq ".[$i].title")
               ISSUE_URL=$(echo $ISSUES | jq ".[$i].html_url")
